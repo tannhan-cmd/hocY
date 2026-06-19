@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chẩn Đoán</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/15536/15536380.png">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #e3f2fd;
+            --text-color: #333;
+            --bg-color: #f4f7f6;
+            --border-radius: 8px;
+        }
+        body::selection {
+            background: rgba(99, 102, 100, 0.3);
+            color: inherit;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-container {
+            max-width: 800px;
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .patient-card {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 4px;
+            margin-bottom: 25px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .section-box {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .section-box h3 {
+            margin-top: 0;
+            color: #444;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        button {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #e2e6ea;
+            border-color: #dae0e5;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        button.btn-primary:hover {
+            background-color: #004494;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .result-display {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fafafa;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            min-height: 40px;
+            font-size: 14px;
+            color: #555;
+        }
+        #p-ChanDoan{
+             user-select: none;
+        }
+
+        #div-CLS{
+            overflow: auto;
+            max-height: 430px;
+        }
+
+        #input-SearchCLS,
+        #input-SearchDT,
+        #input-SearchCD {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #fafafa;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            height: 6px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+         #CD-result em{
+            white-space: pre-line;
+         }
+
+         
+        /* ==========================================================================
+           BỔ SUNG GIAO DIỆN CHO ĐIỆN THOẠI (RESPONSIVE)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Giảm padding viền ngoài để tăng không gian hiển thị */
+            }
+
+            .game-container {
+                padding: 15px; /* Thu gọn khoảng cách bên trong container */
+            }
+
+            .grid-layout {
+                grid-template-columns: 1fr; /* Chuyển từ 2 cột thành 1 cột dọc */
+                gap: 15px;
+            }
+
+            #div-CLS {
+                max-height: 300px; /* Giảm chiều cao vùng Cận lâm sàng trên mobile để tránh cuộn quá dài */
+            }
+            #btnBack{
+                width: 19%;
+            }
+            #input-SearchCLS {
+                width: 100%; /* Ô tìm kiếm mở rộng hết chiều ngang */
+                box-sizing: border-box; /* Tránh tràn viền */
+                height: auto; /* Trả lại chiều cao tự nhiên theo padding */
+            }
+            #input-SearchCD{
+                width: 100%; /* Ô tìm kiếm mở rộng hết chiều ngang */
+                box-sizing: border-box; /* Tránh tràn viền */
+                height: auto; /* Trả lại chiều cao tự nhiên theo padding */
+            }
+            button {
+                padding: 12px 15px; /* Tăng nhẹ độ dày nút bấm để dễ chạm (touch-friendly) */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <button id="btnBack" onclick="backToMainScreen()" style="width: 9%;background: var(--secondary-color);">Back</button>
+        <header>
+            <h1>Ca Lâm Sàng</h1>
+        </header>
+        
+        <div class="patient-card">
+            <h2 style="margin-top: 0; font-size: 18px;">Phần hành chính</h2>
+            <p id="p-hanhChinh"><strong>Họ tên:</strong> null | <strong>Tuổi:</strong> null | <strong>Giới tính:</strong> null</p>
+            <p id="p-lyDoNhapVien"><strong>Lý do vào viện:</strong>...</p>
+            <p id="p-tienSu"><strong>Tiền sử:</strong> ...</p>
+            <p id="p-benhSu"><strong>Bệnh sử:</strong> ...</p>
+        </div>
+
+        <div class="grid-layout">
+            <div class="section-box">
+                <h3>Thăm Khám</h3>
+
+                <button onclick="performAction('dauHieuSinhTon', 'dauHieuSinhTon')">📟 Dấu hiệu sinh tồn</button>
+                <button onclick="performAction('kham', 'toanThan')">👤 Toàn trạng</button>
+                <button onclick="performAction('kham', 'timMach')">❤️ Tim mạch</button>
+                <button onclick="performAction('kham', 'hoHap')">💨 Hô hấp</button>
+                <button onclick="performAction('kham', 'tieuHoa')">🥣 Tiêu hóa</button>
+                <button onclick="performAction('kham', 'thanTietNieu')">💧 Thận tiết niệu</button>
+                <button onclick="performAction('kham', 'coXuongKhop')">🦴 Cơ xương khớp</button>
+                <button onclick="performAction('kham', 'thanKinh')">🧠 Thần kinh</button>
+                
+                <div class="result-display" id="kham-result">
+                    <em>Kết quả thăm khám ...</em>
+                </div>
+            </div>
+            <div>
+                <div id="div-CLS" class="section-box">
+                    <h3>Cận Lâm Sàng</h3>
+                    <input type="text" id="input-SearchCLS" placeholder="Tìm kiếm CLS...">
+                </div>
+                <div class="result-display" id="cls-result">
+                    <em>Kết quả xét nghiệm ...</em>
+                </div>
+            </div>
+
+             <div class="section-box">
+                <h3>Chẩn đoán</h3>
+                <input type="text" id="input-SearchCD" placeholder="Chẩn đoán...">
+                
+                <div id="suggestionsCD"></div>
+                <div class="result-display" id="CD-result">
+                    <em>Chẩn đoán...</em>
+                </div>
+            </div>
+            <div class="section-box">
+                <h3>Điều trị</h3>
+                <input type="text" id="input-SearchDT" placeholder="Điều trị...">
+                
+                <div id="suggestionsDT"></div>
+                <div class="result-display" id="DT-result">
+                    <em>Điều trị...</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h3 id="h3-ketLuanChanDoan">Kết Luận Chẩn Đoán</h3>
+            <p id="p-ChanDoan" >.</p>
+            <!-- <button class="btn-primary" onclick="submitDiagnosis()">Đưa Ra Phác Đồ Điều Trị</button> -->
+            <div id="final-result"></div>
+        </div>
+    </div>
+    <script type="text/javascript" defer>
+        function loadData(){
+            let index    = localStorage.getItem("benhNhanIndex");
+            let script = document.createElement("script");
+            script.src= "data/data"+index+".js";
+            document.body.appendChild(script);
+            script.onload = () => {
+               console.log("dat.js loaded");
+               startApp();
+            };
+        }
+
+        loadData();
+    </script>
+    <script src="dataBenh.js"></script>
+     <script src="dataThuoc.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ca Lâm Sàng</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/15536/15536380.png">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #e3f2fd;
+            --text-color: #333;
+            --bg-color: #f4f7f6;
+            --border-radius: 8px;
+            --success-color: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .selection-container {
+            max-width: 900px;
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .patient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .patient-select-card {
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            background: #fff;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .patient-select-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,86,179,0.1);
+        }
+
+        .patient-info h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        .meta-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .symptom-badge {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .btn-select {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: background 0.2s;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .btn-select:hover {
+            background-color: #004494;
+        }
+
+        .difficulty {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .diff-easy { background: #d4edda; color: #155724; }
+        .diff-medium { background: #fff3cd; color: #856404; }
+        .diff-hard { background: #f8d7da; color: #721c24; }
+
+        /* Responsive cho điện thoại */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .selection-container {
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 22px;
+            }
+            .patient-grid {
+                grid-template-columns: 1fr; /* Xếp dọc hoàn toàn trên mobile */
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="selection-container">
+        <header>
+            <h1> Ca Lâm Sàng</h1>
+        </header>
+
+        <div class="patient-grid">
+            <!-- <div class="patient-select-card"><span class="difficulty diff-easy"></span><div class="patient-info"><h3>Nguyễn Văn A</h3><div class="meta-info"><strong>Tuổi:</strong> 28 | <strong>Giới tính:</strong> Nam</div><div class="symptom-badge">🚨 <strong>Lý do nhập viện:</strong> Sốt nhẹ, nghẹt mũi và đau họng 2 ngày nay.</div></div><button class="btn-select" onclick="selectPatient(0)">Nhận</button></div> -->
+        </div>
+    </div>
+    <script src="data0.js"></script>
+    <script>
+        function selectPatient(patientId) {
+            localStorage.setItem('benhNhanIndex', patientId);
+            window.location.href = 'index1.html'; 
+        }
+        function renderBenhNhan(){
+            let div = document.querySelector(".patient-grid");
+            for(let i=0;i<data.length;i++){  
+                let name=data[i]["tthc"].ht;
+                let age=data[i]["tthc"].t;
+                let sex=data[i]["tthc"].gt;
+                let LDNV=data[i].ldnv;
+                div.innerHTML += `<div class="patient-select-card"><span class="difficulty diff-easy"></span><div class="patient-info"><h3>`+name+`</h3><div class="meta-info"><strong>Tuổi:</strong> `+age+` | <strong>Giới tính:</strong> `+sex+`</div><div class="symptom-badge">🚨 <strong>Lý do nhập viện:</strong> `+LDNV+`.</div></div><button class="btn-select" onclick="selectPatient(`+i+`)">Nhận</button></div> `
+            }
+        }
+        renderBenhNhan();
+    </script>
+</body>
+</html>
