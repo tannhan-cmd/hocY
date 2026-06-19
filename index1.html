@@ -267,7 +267,7 @@
         function loadData(){
             let index    = localStorage.getItem("benhNhanIndex");
             let script = document.createElement("script");
-            script.src= "data/data"+index+".js";
+            script.src= "./data/data"+index+".js";
             document.body.appendChild(script);
             script.onload = () => {
                console.log("dat.js loaded");
