@@ -1,8 +1,8 @@
-data={
+data = {
   "thongTinHanhChinh": {
     "hoTen": "Trần Văn B",
     "tuoi": 70,
-    "gioiTinh": "Nam",
+    "gioiTinh": "Nam",  
   },
   "lyDoNhapVien": "Khó thở dữ dội, sốt cao, lơ mơ",
   "benhSu": {

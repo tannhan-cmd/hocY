@@ -139,7 +139,7 @@ data = {
       "ketQua": "Đang chờ kết quả từ phòng vi sinh."
     }
   ],
-  "chanDoan": {
+  "chanDoan":  {
     "chanDoanXacDinh": [
       "Sốc nhiễm khuẩn từ đường mật",
       "Nhiễm trùng đường mật cấp mức độ nặng (Tokyo 2018 Grade III)",
