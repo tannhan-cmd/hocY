@@ -30,5 +30,21 @@ data=[
     "gt": "Nữ"
   },
   "ldnv": "Sốt cao, đau hông lưng, lơ mơ, tụt huyết áp"
+},
+{
+  "tthc": {
+    "ht": "Nguyễn Văn H",
+    "t": 69,
+    "gt": "Nam"
+  },
+  "ldnv": "Đau ngực dữ dội, khó thở, tụt huyết áp"
+},
+{
+  "tthc": {
+    "ht": "Nguyễn Thị T",
+    "t": 55,
+    "gt": "Nữ"
+  },
+  "ldnv": "Đau bụng vùng thượng vị dữ dội, nôn ói liên tục, lú lẫn"
 }
 ]
