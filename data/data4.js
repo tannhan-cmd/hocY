@@ -115,6 +115,7 @@ data ={
       "Phù phổi cấp",
       "Tổn thương thận cấp"
     ],
+    "icd":["I21","R57.0","I50","J81","N17.9"],
     "chanDoanPhanBiet": [
       "Bóc tách động mạch chủ",
       "Thuyên tắc động mạch phổi"

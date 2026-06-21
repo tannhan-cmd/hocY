@@ -123,6 +123,7 @@ data ={
       "Sỏi túi mật",
       "Tăng huyết áp"
     ],
+    "icd":["K85.9","R65.2","R57.0","I10"],
     "chanDoanPhanBiet": [
       "Thủng tạng rỗng",
       "Nhồi máu mạc treo ruột"
