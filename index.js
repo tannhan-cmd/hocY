@@ -4,7 +4,7 @@ let benhNhanIndex = 0;
 let chanDoanDaChon = [];
 		function loadData(){
 			let script = document.createElement("script");
-			script.src= "./dat"+benhNhanIndex+".js";
+			script.src= ".data/data"+benhNhanIndex+".js";
 			document.body.appendChild(script);
 		}
 
