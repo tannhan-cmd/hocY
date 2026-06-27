@@ -1,4 +1,4 @@
-{
+data ={
   "thongTinHanhChinh": {
     "hoTen": "Nguyễn Thị C",
     "tuoi": 65,
