@@ -46,5 +46,13 @@ data=[
     "gt": "Nữ"
   },
   "ldnv": "Đau bụng vùng thượng vị dữ dội, nôn ói liên tục, lú lẫn"
+},
+{
+  "tthc": {
+    "ht": "Nguyễn Thị C",
+    "t": 65,
+    "gt": "Nữ"
+  },
+  "ldnv": "Đau bụng dữ dội, lú lẫn, tụt huyết áp và vô niệu"
 }
 ]
