@@ -54,5 +54,13 @@ data=[
     "gt": "Nữ"
   },
   "ldnv": "Đau bụng dữ dội, lú lẫn, tụt huyết áp và vô niệu"
+},
+{
+  "tthc": {
+    "ht": "Nguyễn Thị C",
+    "t": 35,
+    "gt": "Nữ"
+  },
+  "ldnv": "Hôn mê, sốt rất cao, nhịp tim đập nhanh liên tục"
 }
 ]
