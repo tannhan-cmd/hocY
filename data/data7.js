@@ -1,6 +1,6 @@
 {
   "thongTinHanhChinh": {
-    "hoTen": "Nguyễn Thị C",
+    "hoTen": "Nguyễn Minh C",
     "tuoi": 35,
     "gioiTinh": "Nữ"
   },

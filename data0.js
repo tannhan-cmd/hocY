@@ -57,7 +57,7 @@ data=[
 },
 {
   "tthc": {
-    "ht": "Nguyễn Thị C",
+    "ht": "Nguyễn Minh C",
     "t": 35,
     "gt": "Nữ"
   },
