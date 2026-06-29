@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web App Tính Toán</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f1f5f9;
+    color: #0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app {
+    width: 95%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.08);
+    overflow: auto;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.screen {
+    display: none;
+    overflow: auto;
+    height: 100%;
+}
+
+.screen.active {
+    display: block;
+    overflow: auto;
+    height: 100%;
+}
+
+.card {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+    font-weight: 500;
+    border: 2px solid #0000f8;
+}
+
+.card:hover {
+    background: #3b82f6;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+    color: #64748b;
+}
+
+input {
+    width: 93%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #0000f8;
+    background: #fff;
+    color: #0f172a;
+    font-size: 16px;
+}
+
+input:focus {
+    outline: 2px solid #3b82f6;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #2563eb;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 14px;
+    background: #f8fafc;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.back-btn {
+    background: #64748b;
+    margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <!-- Trang Chủ -->
+    <div class="screen active" id="homeScreen">
+        <h2>Chọn Công Thức</h2>
+    </div>
+
+    <!-- Trang Tính Toán -->
+     <div class="screen" id="calculatorScreen">
+        <button class="back-btn" onclick="goHome()">← Quay lại</button>
+
+        <h2 id="formulaTitle">Công Thức</h2>
+
+        <div class="input-group">
+            <label class="labell">Giá trị 1</label>
+            <input type="number" id="input1">
+        </div>
+
+        <div class="input-group">
+            <label class="labell">Giá trị 2</label>
+            <input type="number" id="input2">
+        </div>
+
+        <div class="input-group">
+            <label class="labell">Giá trị 3</label>
+            <input type="number" id="input3">
+        </div>
+
+        <button onclick="calculate()">Tính toán</button>
+
+        <div class="result" id="result">
+            Kết quả hiển thị ở đây
+        </div>
+    </div>
+
+</div>
+
+<script>
+let data = {
+    'formulasName':["Liều vận mạch","Hạ Natri","Tăng Natri","Phân Tích Khí Máu","ROX Index","Natri Hiệu Chỉnh","Ngộ độc thuốc tê","Ngộ độc CCB/BB","Ngộ độc Para","Tốc độ truyền Kali"],
+    'formulasInput':[
+        ['Liều','Cân nặng','Hàm lượng thuốc','Số lượng ống thuốc'],
+        ['Natri máu','Cân nặng','Giới tính(nam=1,nữ=0)'],
+        ['Natri máu','Cân nặng','Giới tính(nam=1,nữ=0)'],
+        ['pH','paCO2','HCO3-','Na+','K+','Cl-'],
+        ['SpO2','FiO2','Respiratory Rate'],
+        ['Natri máu','Glucose máu'],
+        ['Cân nặng'],
+        ['Cân nặng'],
+        ['Cân nặng','Lọ ? gram','Lọ ? ml','Nồng độ Para máu (umol/l)'],
+        ['Thể tích dịch truyền(ml)','Số ống 1g Kali']        
+    ]
+}
+let currentFormula = "";
+addFormulasName();
+function addFormulasName(){
+    let div = document.querySelector("#homeScreen");
+    for(let i=0;i<data.formulasName.length;i++){
+        let divChild = document.createElement("div");
+        divChild.classList.add("card");
+        let txt = 'formula'+(i+1)
+        divChild.innerHTML=data.formulasName[i];
+        divChild.addEventListener("click", function() {
+            openCalculator('formula'+(i+1));
+        });
+        div.appendChild(divChild);
+    }
+}
+function openCalculator(formula) {
+    currentFormula = formula;
+    document.getElementById("homeScreen").classList.remove("active");
+    document.getElementById("calculatorScreen").classList.add("active");
+    let txt = formula.replace("formula","");;
+    document.getElementById("formulaTitle").innerText = data.formulasName[txt-1];
+    createLabel();
+}
+
+function goHome() {
+    document.getElementById("calculatorScreen").classList.remove("active");
+    document.getElementById("homeScreen").classList.add("active");
+}
+function createLabel(){
+    let labels = document.querySelectorAll(".labell");
+    const container = document.getElementById("calculatorScreen");
+    container.innerHTML = `<button class="back-btn" onclick="goHome()">← Quay lại</button><h2 id="formulaTitle">Công Thức</h2>`;
+    let txt = currentFormula.replace("formula","");
+    for(let i=0;i<data.formulasInput[txt-1].length;i++){
+         let div = document.createElement('div');
+         div.classList.add("input-group");
+         div.innerHTML =`<label class="labell">`+data.formulasInput[txt-1][i]+`</label><input type="number" id="input`+(i+1)+`">`;
+         container .appendChild(div);
+    } 
+    container.innerHTML +=`<button onclick="calculate()">Tính toán</button><div class="result" id="result">Kết quả hiển thị ở đây</div>`; 
+}
+function calculate() {
+    let v  = document.querySelectorAll("input");
+    let values = [...v].map(input => Number(input.value));
+    let result;
+    let formulaFunction={};
+    // ===== Bạn thêm công thức tại đây =====
+    
+    for(let i=1;i<data.formulasName.length+1;i++){
+        console.log(9900)
+        formulaFunction['formula' + i] = window['formula' + i]
+    }
+    console.log(formulaFunction);
+    formulaFunction[currentFormula](values,result) // chạy formula1
+}
+function formula1(values,result){
+    result =  ((values[0]*50*60*values[1])/(values[2]*values[3]));
+    document.getElementById("result").innerText ="Tốc độ truyền: " + result + " ml/h";
+}
+function formula2(values,result){
+    if(values[2]==1){values[2]=0.6}else{values[2]=0.5}
+    result = 5000 / ((513-values[0])/(values[1]*values[2] +1 ));
+    document.getElementById("result").innerText ="Để tăng Natri lên 5 mmol/L thì cần "+Math.floor(result)+ "ml NaCl 3% trong 6 tiếng";
+}
+function formula3(values,result){
+    if(values[2]==1){values[2]=0.6}else{values[2]=0.5}
+    result = 333*((((values[0] -140 )* (values[1]*values[2]))/140)*0.5)/(values[0]-140);
+    document.getElementById("result").innerText = "Tổng dịch thiếu: "+(((values[0] -140 )* (values[1]*values[2]))/140)+" L" + "\n"+"Tốc độ truyền: "+ result+" g/p";
+}
+function formula4(values,result){
+    //v0: pH      v2:HCO3-  v4:K
+        //v1: paCO2   v3:Na     v5:Cl
+        if(values[0]<7.4){ //Acid
+            if(values[1]>45){//Acid HH
+                    //check cấp hay mạn
+                    let dentaPH = Math.abs(values[0]-7.4);
+                    let dentaCO2 = Math.abs(values[1]-40);
+                    if(dentaPH/dentaCO2>0.006){//Cấp đúng ra là 0.008 nhưng cho 0.006 cho nó dễ tiếp cận, VD tính ra 0.007 là cấp
+                        // tính toán bù trừ
+                        let HCO3Bu = 24+(values[1]-40)/10
+                        // so sánh
+                        if(values[2]<HCO3Bu-2){
+                            result = "Toan hô hấp cấp có toan chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else if(values[2]>HCO3Bu+2){//
+                            result = "Toan hô hấp cấp có kiềm chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else{
+                            result = "Toan hô hấp cấp bù đủ (HCO3 dự đoán: "+HCO3Bu+")";
+                        }
+                    }else if(dentaPH/dentaCO2<0.004){//Mạn
+                        // tính toán bù trừ
+                        let HCO3Bu = 24+4*(values[1]-40)/10
+                        // so sánh
+                        if(values[2]<HCO3Bu-2){
+                            result = "Toan hô hấp mạn có toan chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else if(values[2]>HCO3Bu+2){//
+                            result = "Toan hô hấp mạn có kiềm chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else{
+                            result = "Toan hô hấp mạn bù đủ (HCO3 dự đoán: "+HCO3Bu+")";
+                        }
+                    }else(
+                        //Vừa cấp vừa mạn
+                        result = "Toan hô hấp"
+                    )
+            }else if(values[2]<22){
+                    //Acid CH
+                    let paCO2Bu = 1.5*values[2] + 8;
+                    //Tính AG
+                    let AG = values[3]+values[4]-values[2]-values[5];
+                    let AGtext='';
+                    if(AG>14){
+                        AGtext = "có tăng AG (AG: "+AG+")";
+                    }else{
+                        AGtext = "không tăng AG (AG: "+AG+")";
+                    }
+                    if(values[1]<paCO2Bu-2){
+                        result = "Toan chuyển hóa có kiềm hô hấp đi kèm "+AGtext;
+                    }else if(values[1]>paCO2Bu+2){
+                        result = "Toan chuyển hóa có toan hô hấp đi kèm "+AGtext;
+                    }else{
+                        result = "Toan chuyển hóa bù đủ "+AGtext;
+                    }
+                    
+            }
+        }else if(values[0]>7.4){//Base
+            if(values[1]<35){//Kiềm hô hấp
+                //check cấp hay mạn
+                    let dentaPH = Math.abs(values[0]-7.4);
+                    let dentaCO2 = Math.abs(values[1]-40);
+                    if(dentaPH/dentaCO2>0.006){//Cấp
+                        let HCO3Bu = 24- 2*(40-values[1])/10;
+                        if(values[2]<HCO3Bu-2){
+                            result = "Kiềm hô hấp cấp có toan chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else if(values[2]>HCO3Bu+2){//
+                            result = "Kiềm hô hấp cấp có kiềm chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else{
+                            result = "Kiềm hô hấp cấp bù đủ (HCO3 dự đoán: "+HCO3Bu+")";
+                        }
+                    }else if(dentaPH/dentaCO2<0.004){//Mạn
+                        let HCO3Bu = 24- 5*(40-values[1])/10;
+                        if(values[2]<HCO3Bu-2){
+                            result = "Kiềm hô hấp cấp có toan chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else if(values[2]>HCO3Bu+2){//
+                            result = "Kiềm hô hấp cấp có kiềm chuyển hóa đi kèm (HCO3 dự đoán: "+HCO3Bu+")";
+                        }else{
+                            result = "Kiềm hô hấp cấp bù đủ (HCO3 dự đoán: "+HCO3Bu+")";
+                        }
+                    }else{
+                        result = "Kiềm hô hấp"
+                    }
+
+            }if(values[2]>26){//Kiềm chuyển hóa
+                let paCO2Bu = 40+(values[2]-24)*0.7;
+                if(values[1]<paCO2Bu-2){
+                    result = "Kiềm chuyển hóa có kiềm hô hấp đi kèm"
+                }else if(values[1]>paCO2Bu+2){
+                    result = "Kiềm chuyển hóa có toan hô hấp đi kèm"
+                }else{
+                    result = "Kiềm chuyển hóa"
+                }
+            }
+        }else{
+            //Co2 thấp HCO3 thấp
+            if(values[1]<35 && values[2]<22){
+                let AG = values[3]+values[4]-values[2]-values[5];
+                result = "Kiềm hô hấp và toan chuyển hóa đi kèm" + " AG: "+AG;
+            }
+            //CO2 cao HCO3 cao
+            if(values[1]>45 && values[2]>26){
+                result = "Toan hô hấp và kiềm chuyển hóa đi kèm";
+            }
+            
+        }
+        document.getElementById("result").innerText = result;
+}
+function formula5(values,result){
+    result = (values[0]/(values[1]/100))/values[2];
+    let txt = ""
+    if(result<3.47){
+        txt="Xem xét đặt nội khí quản, ROX: "+result;
+    }
+    else if(result<4.87 && result>=3.47){
+        txt="Tăng hỗ trợ và đánh giá lại sau 30p, ROX: "+result;
+    }
+    else if(result>=4.87){
+        txt="Tiếp tục theo dõi, ROX: "+result;
+    }
+    document.getElementById("result").innerText =txt;
+}
+function formula6(values,result){
+    result =   values[0]+1.6*((values[1]*18)-100)/100
+    document.getElementById("result").innerText ="Natri hiệu chỉnh: " + Math.floor(result) + " mmol/l";
+}
+function formula7(values,result){
+    result =   values[0]*0.2
+    document.getElementById("result").innerText ="Bolus 100ml Lipid, sau đó truyền 0.2-0.5ml/kg/p";
+}
+function formula8(values,result){
+    result =   values[0]*0.5
+    document.getElementById("result").innerText ="Bolus 1 IU/kg Insulin, truyền 0.5 IU/kg/h Insulin\n"+"Bolus:"+values[0]+" IU\n"+"BTĐ:100 IU_SE:"+result*50/100+" ml/h";
+}
+function formula9(values,result){
+    result =   values[0];
+    if(values[1] && values[2]){
+        console.log(values[0]*150/values[1])
+        let dose1 = ((values[0]*150)/(values[1]*1000)).toFixed(1);
+        let dose2 = ((values[0]*50)/(values[1]*1000)).toFixed(1);
+        let dose3 = ((values[0]*100)/(values[1]*1000)).toFixed(1);
+        document.getElementById("result").innerText ="1.NAC "+values[1]+"g/"+values[2]+"ml x "+dose1+" lọ pha trong 200ml Glucose 5%, "+Math.floor((dose1*values[2]+200)/0.5/3)+"g/p(30p)\n2.NAC "+values[1]+"g/"+values[2]+"ml x "+dose2+" lọ pha trong 500ml Glucose 5%, "+Math.floor((dose2*values[2]+500)/4/3)+"g/p(4 giờ)\n3.NAC "+values[1]+"g/"+values[2]+"ml x"+dose3+" lọ pha trong 1000ml Glucose 5%, "+Math.floor((dose3*values[2]+1000)/16/3)+"g/p(16 giờ)";
+
+    }else{
+       let dose1 = ((values[0]*150)/5000).toFixed(1);
+       let dose2 = ((values[0]*50)/5000).toFixed(1);
+       let dose3 = ((values[0]*100)/5000).toFixed(1);
+       document.getElementById("result").innerText ="1.fluimucil 5g/25ml x "+dose1+" lọ pha trong 200ml Glucose 5%, "+Math.floor((dose1*25+200)/0.5/3)+"g/p(30p)\n2.fluimucil 5g/25ml x "+dose2+" lọ pha trong 500ml Glucose 5%, "+Math.floor((dose2*25+500)/4/3)+"g/p(4 giờ)\n3.fluimucil 5g/25ml x"+dose3+" lọ pha trong 1000ml Glucose 5%, "+Math.floor((dose3*25+1000)/16/3)+"g/p(16 giờ)";
+
+    }
+}
+
+function formula10(values,result){
+    result =   (values[0]/values[1])*0.5;
+    document.getElementById("result").innerHTML = "Tốc độ truyền tối đa 20mEq/h ~ "+Math.floor(result)+" g/p<br>"+"&nbsp;".repeat(52)+"~ "+Math.floor(result*3)+" ml/h\n";
+}    
+</script>
+ 
+
+</body>
+</html>
+ 
