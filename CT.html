@@ -161,7 +161,7 @@ button:hover {
 
 <script>
 let data = {
-    'formulasName':["Liều vận mạch","Hạ Natri","Tăng Natri","Phân Tích Khí Máu","ROX Index","Natri Hiệu Chỉnh","Ngộ độc thuốc tê","Ngộ độc CCB/BB","Ngộ độc Para","Tốc độ truyền Kali"],
+    'formulasName':["Liều vận mạch","Hạ Natri","Tăng Natri","Phân Tích Khí Máu","ROX Index","Natri Hiệu Chỉnh","Ngộ độc thuốc tê","Ngộ độc CCB/BB","Ngộ độc Para","Tốc độ truyền Kali","Liều tiêu sợi huyết"],
     'formulasInput':[
         ['Liều','Cân nặng','Hàm lượng thuốc','Số lượng ống thuốc'],
         ['Natri máu','Cân nặng','Giới tính(nam=1,nữ=0)'],
@@ -172,7 +172,8 @@ let data = {
         ['Cân nặng'],
         ['Cân nặng'],
         ['Cân nặng','Lọ ? gram','Lọ ? ml','Nồng độ Para máu (umol/l)'],
-        ['Thể tích dịch truyền(ml)','Số ống 1g Kali']        
+        ['Thể tích dịch truyền(ml)','Số ống 1g Kali'],
+        ['Bệnh(NMN=1, NMCT=0)','Cân nặng']    
     ]
 }
 let currentFormula = "";
@@ -397,6 +398,17 @@ function formula10(values,result){
     result =   (values[0]/values[1])*0.5;
     document.getElementById("result").innerHTML = "Tốc độ truyền tối đa 20mEq/h ~ "+Math.floor(result)+" g/p<br>"+"&nbsp;".repeat(52)+"~ "+Math.floor(result*3)+" ml/h\n";
 }    
+
+function formula11(values,result){
+    if(values[0]==0){
+        let lieu2 = (values[1] * 0.75 > 50) ? 50 : values[1] * 0.75;
+        let lieu3 = (values[1] * 0.5  > 35) ? 35 : values[1] * 0.5;
+        document.getElementById("result").innerHTML = "Alteplase x 2 lọ: Bolus 15ml "+"SE:"+Math.floor(lieu2*2*10)/10+" ml/h (trong 30 phút), SE: "+Math.floor(lieu3*10)/10+" ml/h (trong 1h)";
+    }else{
+        let lieu2 =  (values[1] * 0.9 > 90) ? 90 : values[1] * 0.9;
+        document.getElementById("result").innerHTML = "Alteplase x 2 lọ: Bolus "+ Math.floor(lieu2*0.1*10)/10+"ml, SE: "+lieu2*0.9+" ml/h (trong 1h)";
+    }
+}   
 </script>
  
 
