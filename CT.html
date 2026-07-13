@@ -161,7 +161,7 @@ button:hover {
 
 <script>
 let data = {
-    'formulasName':["Liều vận mạch","Hạ Natri","Tăng Natri","Phân Tích Khí Máu","ROX Index","Natri Hiệu Chỉnh","Ngộ độc thuốc tê","Ngộ độc CCB/BB","Ngộ độc Para","Tốc độ truyền Kali","Liều tiêu sợi huyết"],
+    'formulasName':["Liều vận mạch","Hạ Natri","Tăng Natri","Phân Tích Khí Máu","ROX Index","Natri Hiệu Chỉnh","Ngộ độc thuốc tê","Ngộ độc CCB/BB","Ngộ độc Para","Tốc độ truyền Kali","Liều tiêu sợi huyết","SOFA"],
     'formulasInput':[
         ['Liều','Cân nặng','Hàm lượng thuốc','Số lượng ống thuốc'],
         ['Natri máu','Cân nặng','Giới tính(nam=1,nữ=0)'],
@@ -173,7 +173,8 @@ let data = {
         ['Cân nặng'],
         ['Cân nặng','Lọ ? gram','Lọ ? ml','Nồng độ Para máu (umol/l)'],
         ['Thể tích dịch truyền(ml)','Số ống 1g Kali'],
-        ['Bệnh(NMN=1, NMCT=0)','Cân nặng']    
+        ['Bệnh(NMN=1, NMCT=0)','Cân nặng'],
+        ['PaO2','FiO2','PLT','Bilirubin (µmol/L)','Dopamin',"Noradrenalin","Adrenalin","GCS","Creatinin (µmol/L)","Huyết áp tâm thu","Huyết áp tâm trương"]    
     ]
 }
 let currentFormula = "";
@@ -409,7 +410,41 @@ function formula11(values,result){
         let soLo = (values[1] * 0.9 > 50) ? 2 : 1;
         document.getElementById("result").innerHTML = "Alteplase x "+soLo+" lọ: Bolus "+ Math.floor(lieu2*0.1*10)/10+"ml, SE: "+ Math.floor(lieu2*0.9*10)/10+" ml/h (trong 1h)";
     }
-}   
+}  
+function formula12(values,result){
+    let paO2_FiO2 = values[0] / (values[1]/100);
+    let PLT = values[2];
+    let Bil = values[3];
+    let Dopa = values[4] || 0;
+    let Nor = values[5] || 0;
+    let Adr = values[6] || 0;
+    let GCS = values[7] || 15;
+    let Cre = values[8];
+    let HATThu = values[9];
+    let HATTruong = values[10];
+    let timMach=0;
+    let HA=0;
+    paO2_FiO2 = Math.max(0, Math.min(4, Math.floor((400 - paO2_FiO2) / 100) + 1)); // mapping vào 1,2,3,4 điểm
+    PLT = (PLT < 20) + (PLT < 50) + (PLT < 100) + (PLT < 150);
+    Bil = (Bil >= 20) + (Bil >= 32) + (Bil >= 101) + (Bil >= 204);
+    GCS = (GCS < 15) + (GCS < 13) + (GCS < 10) + (GCS < 6);
+    Cre = (Cre >= 110) + (Cre >= 171) + (Cre >= 300) + (Cre >= 440);
+    if(Dopa !== 0 ){Dopa = 2 + (Dopa > 5) + (Dopa > 15);}
+    if(Nor !== 0 ){Nor = (Nor > 0.1) ? 4 : 3;}
+    if(Adr !== 0 ){Adr = (Adr > 0.1) ? 4 : 3;}
+    if(HATThu>=100){HA=0}
+    else{
+         HA = (HATThu + HATTruong*2)/3 < 70 ? 1 : 0 ; 
+    }
+    //tính tổng điểm
+    timMach = Math.max(Nor || 0, Adr || 0, Dopa || 0);
+    console.log(Nor,Adr,Dopa)
+    if(timMach==0){timMach=HA};
+    let Sum = paO2_FiO2 + PLT + Bil + GCS + Cre + timMach;
+    console.log(paO2_FiO2 , PLT , Bil , GCS , Cre , timMach,HA)
+    document.getElementById("result").innerHTML ="SOFA: "+Sum+" điểm";
+         
+}  
 </script>
  
 

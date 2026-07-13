@@ -62,5 +62,21 @@ data=[
     "gt": "Nữ"
   },
   "ldnv": "Hôn mê, sốt rất cao, nhịp tim đập nhanh liên tục"
+},
+{
+  "tthc": {
+    "ht": "Nguyễn Thị M",
+    "t": 42,
+    "gt": "Nữ"
+  },
+  "ldnv": "Đau bụng dữ dội, chướng bụng căng cứng, nôn ói và khó thở cấp"
+},
+{
+  "tthc": {
+    "ht": "Lê Văn C",
+    "t": 72,
+    "gt": "Nam"
+  },
+  "ldnv": "Lơ mơ, khát nước dữ dội, tiểu nhiều và suy kiệt"
 }
 ]
