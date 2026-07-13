@@ -2,6 +2,7 @@
 let data=''
 let benhNhanIndex = 0;
 let chanDoanDaChon = [];
+let dieuTriDaChon=[];
 		function loadData(){
 			let script = document.createElement("script");
 			script.src= ".data/data"+benhNhanIndex+".js";
@@ -139,6 +140,7 @@ let chanDoanDaChon = [];
 					let checkChanDoan = chanDoanDaChon.filter(x => data.chanDoan.icd.includes(x));
 					console.log("Chẩn đoán đúng " + checkChanDoan.length +"/"+data.chanDoan.icd.length)
 					ketLuanChanDoan(checkChanDoan.length +"/"+data.chanDoan.icd.length);
+					chayGroq();
 
 			}
 			pChanDoan.innerHTML=str;
@@ -208,10 +210,18 @@ let chanDoanDaChon = [];
     const suggestions = document.getElementById("suggestionsDT");
     const emDieuTri = document.querySelector("#DT-result em");
 
-    let dieuTriDaChon = [];
+    dieuTriDaChon = [];
 
     input.addEventListener("input", () => {
-
+    	const SLThuoc = document.getElementById("input-SearchDT-SL");
+    	const btnNhap = document.getElementById("btnDieuTri"); 
+    	const DTResult = document.getElementById("DT-result");
+		const parent = SLThuoc.parentNode;           
+		parent.appendChild(SLThuoc);
+		parent.appendChild(btnNhap);
+		parent.appendChild(DTResult);
+		
+		
         const keyword = removeVietnameseTones(input.value.trim());
 
         if (!keyword) {
@@ -235,25 +245,69 @@ let chanDoanDaChon = [];
 
                 dieuTriDaChon.push(thuoc);
 
-                input.value = "";
+                input.value = thuoc;
                 suggestions.innerHTML = "";
 
                 if (emDieuTri.textContent === "Điều trị...") {
                     emDieuTri.textContent = "";
                 }
 
-                emDieuTri.textContent += thuoc + "\n";
+                // emDieuTri.textContent += thuoc + "\n";
             });
 
             suggestions.appendChild(div);
         });
     });
-}
+}		
+		function clickBtnDieuTri(){	
+			let SLThuoc = document.querySelector("#input-SearchDT-SL");
+			dieuTriDaChon[dieuTriDaChon.length-1]+=" x "+SLThuoc.value;
+			let emDieuTri = document.querySelector("#DT-result em");
+			emDieuTri.textContent += dieuTriDaChon[dieuTriDaChon.length-1] + "\n";
+		}
 		function ketLuanChanDoan(text){
 			let h3 = document.querySelector("#h3-ketLuanChanDoan");
 			h3.innerHTML =  "Kết Luận Chẩn Đoán "+`<span style="color:green">`+text+`</span>`;
 		}
+		
+
+		async function askGroq(prompt) {	
+			 const API_KEY = "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";
+   			 const response = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ],
+                response_format: {
+    				type: "json_object"
+  				}
+            })
+        }
+    );
+    	const data = await response.json();
+		console.log(data);
+		if (!response.ok) {
+		    throw new Error(data.error.message);
+		}
+		return data.choices[0].message.content;
+		}
 		function startApp(){
+			document.querySelectorAll("input").forEach(input => {
+  				input.addEventListener("focus", function () {
+       				this.select();
+    			});
+			});
 			getLocalStorage();
 	        renderBenhNhan();
 	        renderCLS();
@@ -262,3 +316,108 @@ let chanDoanDaChon = [];
 	        inputCD();
         	inputDT();
 		}
+		async function chayGroq() {
+			const canLamSang = data.canLamSang.map(item => {
+    			let value = "";
+    			if (item.ketQua) {
+      				if (typeof item.ketQua === "object") {
+       				 	value = Object.entries(item.ketQua).map(([k, v]) => `${k}: ${v}`).join(", ");
+     				} else {
+        				value = item.ketQua;
+      				}
+    			} else if (item.ketLuan) {
+     				 value = item.ketLuan;
+    			}
+    			return `${item.label}: ${value}`;
+  			}).join("\n");
+			let chanDoan ='';
+			for(let i=0;i<data.chanDoan.chanDoanXacDinh.length;i++){
+				chanDoan+=data.chanDoan.chanDoanXacDinh[i]+",";
+			} 
+			let prompt = `
+				1.Lý do nhập viện: `+data.lyDoNhapVien+`
+				2.Bệnh sử : `+data.benhSu.khoiPhat + data.benhSu.dienTien+`
+				3.Tiền sử quan trọng: `+data.tienSu.banThan+`
+				4.Dấu hiệu sinh tồn: mạch: `+data.dauHieuSinhTon.mach+`, huyết áp : `+data.dauHieuSinhTon.huyetAp+`, nhịp thở :`+ data.dauHieuSinhTon.nhipTho+`, nhiệt độ :`+data.dauHieuSinhTon.nhietDo+`, spo2 : `+data.dauHieuSinhTon.spo2+`
+				5.Khám lâm sàng: toàn thân: `+data.thamKhamLamSang.toanThan+`,hô hấp: `+data.thamKhamLamSang.hoHap+`,tim mạch:`+ data.thamKhamLamSang.timMach+`,tiêu hóa: `+data.thamKhamLamSang.tieuHoa+`,thận tiết niệu:`+ data.thamKhamLamSang.thanTietNieu+`,thần kinh:`+ data.thamKhamLamSang.thanKinh+`,xơ xương khớp:`+ data.thamKhamLamSang.coXuongKhop+`,
+				6.Cận lâm sàng:`+canLamSang+`
+				Đáp án chuẩn
+				Chẩn đoán:`+chanDoan+`
+				Điều trị:`+
+				 JSON.stringify(data.dieuTri).replace(/^{"dieuTri":{/, "").replace(/}}$/, "").replace(/"/g, "").replace(/[{}]/g, "")+` 
+				=====================
+				Thí sinh làm
+				Chẩn đoán
+				`+document.querySelector("#CD-result > em").innerHTML+`
+				Điều trị:
+				`+JSON.stringify(dieuTriDaChon).replace(/[{}]/g, "")+`
+				=====================
+				Hãy chấm điểm:
+				- Chẩn đoán
+				- Điều trị
+				- Chỉ ra điều trị sai
+				- Chỉ ra điều trị còn thiếu
+				- Giải thích ngắn gọn
+				- Bạn chỉ được trả về JSON hợp lệ.
+				- Không được thêm markdown.
+				- Không được thêm giải thích.
+				- Không được đổi tên key.
+				- Nếu không có dữ liệu thì để null hoặc [].
+				Schema:
+					{
+					  "chanDoan": {
+					    "diem": 0,
+					    "nhanXet": "",
+					    "thieu": [],
+					    "sai": []
+					  },
+					  "dieuTri": {
+					    "diem": 0,
+					    "nhanXet": "",
+					    "thieu": [],
+					    "sai": []
+					  },
+					  "tongKet": ""
+					}`;
+				console.log(prompt)
+    		let answer = await askGroq(prompt);
+    		// console.log(answer)
+    		renderGroq(answer);
+		}
+	function renderGroq(rp){
+		reponess = JSON.parse(rp);
+		console.log(rp)
+		let gameContainer = document.querySelector(".game-container");
+		const html = `
+			<b>🩺 Chẩn đoán (${reponess.chanDoan.diem} điểm)</b><br>
+			- Nhận xét: ${reponess.chanDoan.nhanXet}<br>
+			- Thiếu:
+			<ul>
+			    ${reponess.chanDoan.thieu.map(item => `<li>${item}</li>`).join("")}
+			</ul>
+			- Sai:
+			<ul>
+			    ${reponess.chanDoan.sai.map(item => `<li>${item}</li>`).join("")}
+			</ul>
+
+			<b>💊 Điều trị (${reponess.dieuTri.diem} điểm)</b><br>
+			- Nhận xét: ${reponess.dieuTri.nhanXet}<br>
+			- Thiếu:
+			<ul>
+			    ${reponess.dieuTri.thieu.map(item => `<li>${item}</li>`).join("")}
+			</ul>
+			- Sai:
+			<ul>
+			    ${reponess.dieuTri.sai.map(item => `<li>${item}</li>`).join("")}
+			</ul>
+
+			<b>📋 Tổng kết</b><br>
+			${reponess.tongKet}
+			`;
+		let AIElement = ` <div class="section-box">
+						<h3 id="h3-ketLuanChanDoan">Đánh giá</h3>
+            			<p id="p-Groq" >`+html+`</p>
+           				<div id="final-result-Groq"></div>
+        				</div>`
+        gameContainer.innerHTML+=AIElement;
+	}

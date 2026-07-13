@@ -136,6 +136,7 @@
 
         #input-SearchCLS,
         #input-SearchDT,
+        #input-SearchDT-SL,
         #input-SearchCD {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -149,6 +150,7 @@
             width: 100%;
             box-sizing: border-box;
         }
+         #DT-result em,
          #CD-result em{
             white-space: pre-line;
          }
@@ -248,7 +250,8 @@
             <div class="section-box">
                 <h3>Điều trị</h3>
                 <input type="text" id="input-SearchDT" placeholder="Điều trị...">
-                
+                <input type="text" id="input-SearchDT-SL" placeholder="Số lượng">
+                <button id="btnDieuTri" onclick="clickBtnDieuTri()">Nhập...</button>    
                 <div id="suggestionsDT"></div>
                 <div class="result-display" id="DT-result">
                     <em>Điều trị...</em>
