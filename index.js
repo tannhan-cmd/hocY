@@ -4,6 +4,22 @@ let benhNhanIndex = 0;
 let chanDoanDaChon = [];
 let dieuTriDaChon = [];
 
+function startApp() {
+    document.querySelectorAll("input").forEach(input => {
+        input.addEventListener("focus", function() {
+            this.select();
+        });
+    });
+    getLocalStorage();
+    renderBenhNhan();
+    renderCLS();
+    searchInputCLS();
+    renderChanDoan();
+    inputCD();
+    inputDT();
+    checkNullRender();
+}
+
 function loadData() {
     let script = document.createElement("script");
     script.src = ".data/data" + benhNhanIndex + ".js";
@@ -75,7 +91,15 @@ function renderBenhNhan() {
     }
 
 }
+function checkNullRender(){
+	console.log("dang chay");
+	const tenBenhNhan = document.querySelector("#p-hanhChinh").childNodes[1]; // kiểm tra tên có phải là null không
+	if(tenBenhNhan.textContent.includes("null")){
+		alert(12)
+		window.location.reload();
 
+	}
+}
 function renderCLS() {
     let divCLS = document.querySelector('#div-CLS');
     for (let i = 0; i < data["canLamSang"].length; i++) {
@@ -311,20 +335,6 @@ async function askGroq(prompt) {
     return data.choices[0].message.content;
 }
 
-function startApp() {
-    document.querySelectorAll("input").forEach(input => {
-        input.addEventListener("focus", function() {
-            this.select();
-        });
-    });
-    getLocalStorage();
-    renderBenhNhan();
-    renderCLS();
-    searchInputCLS();
-    renderChanDoan();
-    inputCD();
-    inputDT();
-}
 async function chayGroq() {
     const canLamSang = data.canLamSang.map(item => {
         let value = "";
@@ -344,46 +354,7 @@ async function chayGroq() {
         chanDoan += data.chanDoan.chanDoanXacDinh[i] + ",";
     }
 
-    // let prompt = `
-
-    // 	Đáp án chuẩn
-    // 	Chẩn đoán:`+chanDoan+`
-    // 	Điều trị:`+
-    // 	 JSON.stringify(data.dieuTri).replace(/^{"dieuTri":{/, "").replace(/}}$/, "").replace(/"/g, "").replace(/[{}]/g, "")+` 
-    // 	=====================
-    // 	Thí sinh làm
-    // 	Chẩn đoán
-    // 	`+document.querySelector("#CD-result > em").innerHTML+`
-    // 	Điều trị:
-    // 	`+JSON.stringify(dieuTriDaChon).replace(/[{}]/g, "")+`
-    // 	=====================
-    // 	Hãy chấm điểm:
-    // 	- Chẩn đoán
-    // 	- Điều trị
-    // 	- Chỉ ra điều trị sai
-    // 	- Chỉ ra điều trị còn thiếu
-    // 	- Giải thích ngắn gọn
-    // 	- Bạn chỉ được trả về JSON hợp lệ.
-    // 	- Không được thêm markdown.
-    // 	- Không được thêm giải thích.
-    // 	- Không được đổi tên key.
-    // 	- Nếu không có dữ liệu thì để null hoặc [].
-    // 	Schema:
-    // 		{
-    // 		  "chanDoan": {
-    // 		    "diem": 0,
-    // 		    "nhanXet": "",
-    // 		    "thieu": [],
-    // 		    "sai": []
-    // 		  },
-    // 		  "dieuTri": {
-    // 		    "diem": 0,
-    // 		    "nhanXet": "",
-    // 		    "thieu": [],
-    // 		    "sai": []
-    // 		  },
-    // 		  "tongKet": ""
-    // 		}`;
+    
     let prompt = `Bạn là giám khảo chấm thi lâm sàng ICU.
 
 So sánh "Đáp án chuẩn" với "Thí sinh làm".

@@ -266,6 +266,7 @@
             <div id="final-result"></div>
         </div>
     </div>
+    <script src="index.js"></script>
     <script type="text/javascript" defer>
         function loadData(){
             let index    = localStorage.getItem("benhNhanIndex");
@@ -273,7 +274,7 @@
             script.src= "./data/data"+index+".js";
             document.body.appendChild(script);
             script.onload = () => {
-               console.log("dat.js loaded");
+               console.log("data.js loaded");
                startApp();
             };
         }
@@ -282,7 +283,7 @@
     </script>
     <script src="dataBenh.js"></script>
      <script src="dataThuoc.js"></script>
-    <script src="index.js"></script>
+   
 </body>
 </html>
 
