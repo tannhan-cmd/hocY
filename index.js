@@ -7,7 +7,8 @@ let dieuTriDaChon = [];
 function startApp() {
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", function() {
-            this.select();
+           // this.select();
+           this.value="";
         });
     });
     getLocalStorage();

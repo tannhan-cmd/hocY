@@ -78,5 +78,21 @@ data=[
     "gt": "Nam"
   },
   "ldnv": "Lơ mơ, khát nước dữ dội, tiểu nhiều và suy kiệt"
+},
+{
+  "tthc": {
+    "ht": "Nguyễn Văn H",
+    "t": 68,
+    "gt": "Nam"
+  },
+  "ldnv": "Đau bụng dữ dội hạ sườn phải, sốt cao rét run, lơ mơ"
+},
+{
+  "tthc": {
+    "ht": "Nguyễn Ngọc V",
+    "t": 65,
+    "gt": "Nam"
+  },
+  "ldnv": "Sốt cao, tiểu buốt kèm run lẩy bẩy, kích động rồi hôn mê"
 }
 ]
