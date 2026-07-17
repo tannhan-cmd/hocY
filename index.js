@@ -3,7 +3,7 @@ let data = ''
 let benhNhanIndex = 0;
 let chanDoanDaChon = [];
 let dieuTriDaChon = [];
-
+let API_KEY='';
 function startApp() {
     document.querySelectorAll("input").forEach(input => {
         input.addEventListener("focus", function() {
@@ -20,7 +20,17 @@ function startApp() {
     inputDT();
     checkNullRender();
 }
-
+  getAPIKEY();
+async function getAPIKEY(){
+	let rs = await fetch("https://hook.eu2.make.com/lyuf25ki296f6aovkdanap1nyvwrcmpx", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    }
+});
+	 API_KEY = await rs.text();
+    
+}
 function loadData() {
     let script = document.createElement("script");
     script.src = ".data/data" + benhNhanIndex + ".js";
@@ -308,7 +318,6 @@ function ketLuanChanDoan(text) {
 
 
 async function askGroq(prompt) {
-    const API_KEY = "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";
     const response = await fetch(
         "https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
