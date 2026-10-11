@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#f78839">
+<link rel="icon" href="./m3-img.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Checklist</title>
+<style>
+:root {
+  --primary: #4f46e5;
+  --bg: #f5f7fb;
+  --text: #20253a;
+  --muted: #8b93a7;
+  --border: #e9ecf3;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.app {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 32px 22px 40px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--primary);
+  color: white;
+  font-size: 24px;
+  box-shadow: 0 5px 15px #4f46e533;
+}
+
+h1 {
+  font-size: 24px;
+  margin: 0 0 5px;
+  letter-spacing: -0.7px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.save-status {
+  font-size: 12px;
+  color: #15966a;
+  white-space: nowrap;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.tab {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px 10px;
+  background: var(--white);
+  color: #727b91;
+  text-align: left;
+  transition: 0.2s;
+}
+
+.tab.active {
+  border-color: var(--primary);
+  background: #eeedff;
+  color: var(--primary);
+  box-shadow: 0 3px 10px #4f46e50d;
+}
+
+.tab-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.tab-count {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 30px #28365b08;
+}
+
+.panel-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.panel h2 {
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+.description {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.progress-number {
+  color: var(--primary);
+  font-size: 23px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.progress-track {
+  height: 7px;
+  background: #eff0f6;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6366f1, #8b7cf6);
+  border-radius: inherit;
+  transition: width 0.25s ease;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 13px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+  min-height: 53px;
+}
+
+.check-item:hover {
+  border-color: #c9c6ff;
+  background: #fafaff;
+}
+
+.check-item.done {
+  background: #f7f8fc;
+  border-color: #eef0f5;
+}
+
+.check-item input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 21px;
+  height: 21px;
+  min-width: 21px;
+  margin: 0;
+  border: 1.8px solid #cbd0dd;
+  border-radius: 7px;
+  background: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.check-item input:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.check-item input:checked::after {
+  content: "✓";
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.item-text {
+  font-size: 14px;
+  line-height: 1.5;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.check-item.done .item-text {
+  color: #969caf;
+  text-decoration: line-through;
+}
+
+.item-number {
+  color: #a0a6b7;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 19px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: white;
+  color: #555f76;
+  padding: 10px 13px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #f6f6ff;
+  border-color: #c9c6ff;
+}
+
+.btn.primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.btn.primary:hover {
+  background: #4338ca;
+}
+
+.btn.danger {
+  color: #dc5252;
+}
+
+.footer {
+  text-align: center;
+  color: #a1a7b7;
+  font-size: 12px;
+  margin-top: 22px;
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 22px 13px 28px;
+  }
+
+  h1 {
+    font-size: 21px;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  .save-status {
+    font-size: 10px;
+    padding-top: 6px;
+  }
+
+  .tabs {
+    gap: 6px;
+  }
+
+  .tab {
+    padding: 12px 9px;
+    border-radius: 12px;
+  }
+
+  .tab-name {
+    font-size: 12px;
+  }
+
+  .tab-count {
+    font-size: 11px;
+  }
+
+  .panel {
+    padding: 17px 13px;
+    border-radius: 16px;
+  }
+
+  .panel h2 {
+    font-size: 18px;
+  }
+
+  .check-item {
+    padding: 12px 10px;
+    gap: 10px;
+  }
+
+  .item-text {
+    font-size: 13px;
+  }
+
+  .actions {
+    align-items: stretch;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon">✓</div>
+      <div>
+        <h1>Kiểm tra</h1>
+        <div class="subtitle">Check list</div>
+      </div>
+    </div>
+    <div class="save-status">● Đã bật tự lưu</div>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Danh sách checklist">
+    <button class="tab active" data-tab="0">
+      <span class="tab-name">Xuất viện</span>
+      <span class="tab-count">0/10 hoàn thành</span>
+    </button>
+    <button class="tab" data-tab="1">
+      <span class="tab-name">Chuyển khoa</span>
+      <span class="tab-count">0/10 hoàn thành</span>
+    </button>
+    <button class="tab" data-tab="2">
+      <span class="tab-name">Tử vong</span>
+      <span class="tab-count">0/11 hoàn thành</span>
+    </button>
+  </nav>
+
+  <main class="panel">
+    <div class="panel-top">
+      <div>
+        <h2 id="listTitle">Xuất viện</h2>
+        <div class="description" id="description">
+          Đánh dấu các mục khi bạn hoàn thành.
+        </div>
+      </div>
+      <div class="progress-number" id="progressNumber">0/10</div>
+    </div>
+
+    <div
+      class="progress-track"
+      role="progressbar"
+      id="progressBar"
+      aria-label="Tiến độ hoàn thành"
+      aria-valuemin="0"
+      aria-valuemax="10"
+      aria-valuenow="0"
+    >
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="checklist" id="checklist"></div>
+
+    <div class="actions">
+      <div class="action-group">
+        <button class="btn primary" id="completeAll">
+          ✓ Hoàn thành tất cả
+        </button>
+        <button class="btn" id="uncheckAll">
+          Bỏ chọn tất cả
+        </button>
+      </div>
+      <button class="btn danger" id="resetTab">
+        ↻ Đặt lại
+      </button>
+    </div>
+  </main>
+
+  <div class="footer">
+    Dữ liệu được lưu tự động trên thiết bị của bạn.
+  </div>
+
+</div>
+<script>
+  
+</script>
+<script>
+// ========================================
+// 1. CHỈNH TÊN TAB VÀ NỘI DUNG TẠI ĐÂY
+// ========================================
+
+const lists = [
+  {
+    title: "Xuất viện",
+    description: "Tiến độ",
+    items: [
+      "Tờ điều trị",
+      "Cắt thuốc",
+      "Xét nghiệm",
+      "Chẩn đoán hình ảnh",
+      "Thở máy, hút đàm",
+      "Vỏ bệnh án",
+      "Tờ giải thích bệnh",
+      "Scan tờ giải thích bệnh và ký",
+      "Tờ bệnh nặng xin về",
+      "Bồi dưỡng thủ thuật",
+      "Khí dung"
+    ]
+  },
+  {
+    title: "Chuyển khoa",
+    description: "Tiến độ",
+    items: [
+      "Tờ điều trị",
+      "Bàn giao bệnh nhân",
+      "Xét nghiệm đường máu mao mạch",
+      "Thở máy, hút đàm",
+      "Bồi dưỡng thủ thuật",
+      "Khí dung",
+      "Khí máu"
+    ]
+  },
+  {
+    title: "Tử vong",
+    description: "Tiến độ",
+    items: [
+      "Tờ điều trị",
+      "Vỏ bệnh án",
+      "Phiếu chuyển bệnh nhân tử vong",
+      "Tờ kiểm thảo tử vong",
+      "Cắt thuốc",
+      "Chẩn đoán tử vong",
+      "Xét nghiệm",
+      "Chẩn đoán hình ảnh",
+      "Thở máy, hút đàm",
+      "Bồi dưỡng thủ thuật",
+      "Giấy báo tử",
+      "Phiếu theo dõi điều trị"
+    ]
+  }
+];
+
+// ========================================
+// 2. CHỨC NĂNG CHECKLIST
+// ========================================
+
+const STORAGE_KEY = "my-checklist-v1";
+let activeTab = 0;
+let state = loadState();
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (Array.isArray(saved) && saved.length === 3) {
+      return lists.map((list, i) =>
+        list.items.map((_, j) =>
+          Boolean(saved[i]?.[j])
+        )
+      );
+    }
+  } catch (e) {
+    console.warn("Không thể đọc dữ liệu đã lưu.", e);
+  }
+
+  return lists.map(list => list.items.map(() => false));
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.warn("Không thể lưu dữ liệu.", e);
+  }
+}
+
+const tabs = document.getElementById("tabs");
+const checklist = document.getElementById("checklist");
+const listTitle = document.getElementById("listTitle");
+const description = document.getElementById("description");
+const progressNumber = document.getElementById("progressNumber");
+const progressFill = document.getElementById("progressFill");
+const progressBar = document.getElementById("progressBar");
+
+function renderTabs() {
+  [...tabs.children].forEach((tab, i) => {
+    const completed = state[i].filter(Boolean).length;
+    const total = state[i].length;
+
+    tab.classList.toggle("active", i === activeTab);
+    tab.setAttribute("aria-pressed", String(i === activeTab));
+    tab.querySelector(".tab-name").textContent = lists[i].title;
+    tab.querySelector(".tab-count").textContent =
+      `${completed}/${total} hoàn thành`;
+  });
+}
+
+function renderChecklist() {
+  const list = lists[activeTab];
+
+  listTitle.textContent = list.title;
+  description.textContent = list.description;
+  checklist.replaceChildren();
+
+  list.items.forEach((item, i) => {
+    const label = document.createElement("label");
+    label.className = "check-item";
+    label.classList.toggle("done", state[activeTab][i]);
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = state[activeTab][i];
+    input.setAttribute("aria-label", item);
+
+    input.addEventListener("change", () => {
+      state[activeTab][i] = input.checked;
+      saveState();
+      renderChecklist();
+      renderTabs();
+    });
+
+    const number = document.createElement("span");
+    number.className = "item-number";
+    number.textContent = String(i + 1).padStart(2, "0");
+
+    const text = document.createElement("span");
+    text.className = "item-text";
+    text.textContent = item;
+
+    label.append(input, number, text);
+    checklist.appendChild(label);
+  });
+
+  const completed = state[activeTab].filter(Boolean).length;
+  const total = list.items.length;
+  const percent = total ? completed / total * 100 : 0;
+
+  progressNumber.textContent = `${completed}/${total}`;
+  progressFill.style.width = `${percent}%`;
+  progressBar.setAttribute("aria-valuenow", completed);
+
+  if (completed === total) {
+    description.textContent = "🎉 Tuyệt vời! Bạn đã hoàn thành tất cả.";
+  }
+
+  renderTabs();
+}
+
+tabs.addEventListener("click", event => {
+  const tab = event.target.closest("[data-tab]");
+  if (!tab) return;
+
+  activeTab = Number(tab.dataset.tab);
+  renderChecklist();
+});
+
+document.getElementById("completeAll").addEventListener("click", () => {
+  state[activeTab] = lists[activeTab].items.map(() => true);
+  saveState();
+  renderChecklist();
+});
+
+document.getElementById("uncheckAll").addEventListener("click", () => {
+  state[activeTab] = lists[activeTab].items.map(() => false);
+  saveState();
+  renderChecklist();
+});
+
+document.getElementById("resetTab").addEventListener("click", () => {
+  if (!confirm("Bạn muốn đặt lại checklist của tab này?")) return;
+
+  state[activeTab] = lists[activeTab].items.map(() => false);
+  saveState();
+  renderChecklist();
+});
+
+renderChecklist();
+</script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .catch(error => {
+        console.error("Service Worker error:", error);
+      });
+  });
+}
+</script>
+</body>
+</html>
