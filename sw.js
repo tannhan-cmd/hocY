@@ -2,9 +2,9 @@ const CACHE_NAME = "my-checklist-v1";
 
 const ASSETS = [
   "./",
-  "./index.html",
+  "./m3.html",
   "./manifest.json",
-  "./m3-img.png"
+  "./m3-img.png",
 ];
 
 self.addEventListener("install", event => {

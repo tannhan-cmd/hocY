@@ -1,9 +1,9 @@
 {
-  "id": "./",
+  "id": "./m3.html",
   "name": "My Checklist",
   "short_name": "Checklist",
   "description": "Checklist cá nhân",
-  "start_url": "./",
+  "start_url": "./m3.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -12,12 +12,14 @@
     {
       "src": "./m3-img.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "./m3-img.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
